@@ -1,0 +1,6 @@
+USER/DebugConfig/
+USER/Listings/
+*.uvoptx
+USER/scheduler.uvguix.CharlieM
+USER/EventRecorderStub.scvd
+OBJ/

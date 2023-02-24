@@ -14,6 +14,7 @@ typedef struct mem_unit{
 
 void *mem_alloc(uint32_t size);
 void mem_free(void *pointer);
+void mem_free_all();
 
 void *memalloc_bitmap(uint32_t size);
 void memfree_all();

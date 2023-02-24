@@ -337,7 +337,7 @@
               <MiscControls>--cpp11</MiscControls>
               <Define>USE_HAL_DRIVER,STM32L475xx</Define>
               <Undefine></Undefine>
-              <IncludePath>..\SYSTEM\delay;..\SYSTEM\sys;..\SYSTEM\usart;..\SYSTEM\dma;..\SYSTEM\mem;..\HALLIB\STM32L4xx_HAL_Driver\Inc;..\CORE;..\USER;..\HALLIB\STM32L4xx_HAL_Driver\Inc\Legacy</IncludePath>
+              <IncludePath>..\SYSTEM\delay;..\SYSTEM\sys;..\SYSTEM\usart;..\SYSTEM\dma;..\SYSTEM\mem;..\SYSTEM\rng;..\HALLIB\STM32L4xx_HAL_Driver\Inc;..\CORE;..\USER;..\HALLIB\STM32L4xx_HAL_Driver\Inc\Legacy</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -531,6 +531,11 @@
               <FileType>1</FileType>
               <FilePath>..\HALLIB\STM32L4xx_HAL_Driver\Src\stm32l4xx_hal_tim_ex.c</FilePath>
             </File>
+            <File>
+              <FileName>stm32l4xx_hal_rng.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\HALLIB\STM32L4xx_HAL_Driver\Src\stm32l4xx_hal_rng.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -585,6 +590,16 @@
               <FileName>mem.h</FileName>
               <FileType>5</FileType>
               <FilePath>..\SYSTEM\mem\mem.h</FilePath>
+            </File>
+            <File>
+              <FileName>rng.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\SYSTEM\rng\rng.c</FilePath>
+            </File>
+            <File>
+              <FileName>rng.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\SYSTEM\rng\rng.h</FilePath>
             </File>
           </Files>
         </Group>

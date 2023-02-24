@@ -1,6 +1,7 @@
 #include "mem.h"
 #include "delay.h"
 #include "dma.h"
+#include "rng.h"
 #include <stdlib.h>
 #include <time.h>
 #include <string.h>
@@ -28,7 +29,7 @@ void *mem_alloc(uint32_t size)
 	do
 	{
 		is_success = 1;
-		s_addr = rand() % (MEMORY_POOL_SIZE - size + 1);
+		s_addr = RNG_Get_RandomNum() % (MEMORY_POOL_SIZE - size + 1);
 		for (uint8_t i = 0; i < allocate_num; i++)
 		{
 			if (MAX(u[i].start_address, s_addr) < 
@@ -57,6 +58,12 @@ void mem_free(void *pointer)
 		}
 	}
 	allocate_num--;
+}
+
+void mem_free_all()
+{
+	memset(u, 0, MAX_ALLOCATE_NUM);
+	allocate_num = 0;
 }
 
 void *memalloc_bitmap(uint32_t size)

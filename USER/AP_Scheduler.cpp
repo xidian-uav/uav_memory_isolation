@@ -94,7 +94,7 @@ void AP_Scheduler::run(uint32_t time_available)
         _task_time_started = now;
 
 		//DMA_printf((char *)"%d\r\n", task.priority);
-		uint32_t run_time = _task_time_allowed / 2;
+		uint16_t run_time = task.run_time;
         task_delay(run_time);
 
         // record the tick counter when we ran. This drives
@@ -118,12 +118,11 @@ void AP_Scheduler::loop()
 {	
 	uint32_t start_time = STM32_TIM2->CNT;
 	DMA_printf((char *)"st:%d,\r\n", start_time);
-	int finish_in_time = 0;
-	for (int i = 0; i < 400; i++)
+	for (;;)
 	{
 		MPU_Config();
 		
-		__IO uint8_t *PSP_Mem = (uint8_t *)memalloc_bitmap(SP_PROCESS_SIZE);
+		__IO uint8_t *PSP_Mem = (uint8_t *)mem_alloc(SP_PROCESS_SIZE);
 		
 		//DMA_printf((char *)"psp:0x%x,\r\n", (uint32_t)PSP_Mem);
 		
@@ -149,7 +148,7 @@ void AP_Scheduler::loop()
 		}	
 
 		//DMA_printf((char *)"%d\r\n", 0);
-		task_delay(1600);
+		task_delay(1400);
 		
 		tick();
 		
@@ -173,44 +172,49 @@ void AP_Scheduler::loop()
 		/* Execute ISB instruction to flush pipeline as recommended by Arm */
 		__ISB();
 		
-		//mem_free((void *)PSP_Mem);
-		memfree_all();
+		mem_free((void *)PSP_Mem);
+		//memfree_all();
 		
 		uint32_t end_time = STM32_TIM2->CNT;
 		if (end_time - start_time >= 1000000)
 		{
 			//DMA_printf((char *)"et:%d,\r\n", end_time);
 			break;
-		} else {
-			finish_in_time = 1;
 		}
 	}
 	
-	if (finish_in_time) {
-		//DMA_printf((char *)"et:%d,\r\n", STM32_TIM2->CNT);
+	for (int i = 0; i < _num_tasks; i++)
+	{		
+		//DMA_printf((char *)"%d, %d,\r\n", _vehicle_tasks[i].priority, _excuted_times[i]);
 	}
 	
-//	for (int i = 0; i < _num_tasks; i++)
+//	uint32_t s_time = STM32_TIM2->CNT;
+//	for (int i = 0; i < 50; i++)
 //	{
-//		DMA_printf((char *)"%d, %d,\r\n", _vehicle_tasks[i].priority, _excuted_times[i]);
+//		int *p = (int *)memalloc_bitmap(64);
 //	}
+//	uint32_t e_time = STM32_TIM2->CNT;
+//	DMA_printf((char *)"ct:%d,\r\n", e_time - s_time);
 //	
-	uint32_t s_time = STM32_TIM2->CNT;
-	for (int i = 0; i < 50; i++)
-	{
-		int *p = (int *)memalloc_bitmap(64);
-	}
-	uint32_t e_time = STM32_TIM2->CNT;
-	DMA_printf((char *)"ct:%d,\r\n", e_time - s_time);
+	uint16_t alloc_size[] = {64, 64, 112, 144, 304, 1024};
 	
-	s_time = STM32_TIM2->CNT;
-	for (int i = 0; i < 50; i++)
+	for (int i = 0; i < 6; i++)
 	{
-		int *p = (int *)mem_alloc(64);
+		uint32_t s_time = STM32_TIM2->CNT;
+		int *p = (int *)mem_alloc(alloc_size[i]);
+		uint32_t e_time = STM32_TIM2->CNT;
+		DMA_printf((char *)"ct, %d, %d,\r\n", e_time - s_time, p);
 	}
-	e_time = STM32_TIM2->CNT;
-	DMA_printf((char *)"ct:%d,\r\n", e_time - s_time);
 	
+	mem_free_all();
+	
+	for (int i = 5; i >= 0; i--)
+	{
+		uint32_t s_time = STM32_TIM2->CNT;
+		int *p = (int *)mem_alloc(alloc_size[i]);
+		uint32_t e_time = STM32_TIM2->CNT;
+		DMA_printf((char *)"ct, %d, %d,\r\n", e_time - s_time, p);
+	}
 }
 
 void AP_Scheduler::task_delay(uint32_t time)

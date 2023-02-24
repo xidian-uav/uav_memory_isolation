@@ -3,8 +3,8 @@
 
 #include "sys.h"
 
-#define SCHED_TASK_CLASS(_rate_hz, _max_time_micros, _priority) \
-        {_rate_hz, _max_time_micros, _priority}
+#define SCHED_TASK_CLASS(_rate_hz, _max_time_micros, _priority, _run_time) \
+        {_rate_hz, _max_time_micros, _priority, _run_time}
 
 class AP_Scheduler
 {
@@ -14,6 +14,7 @@ class AP_Scheduler
 			float rate_hz;
 			uint16_t max_time_micros;
 			uint8_t priority; // task priority
+			uint16_t run_time;
 		};
 	
 		void init(const AP_Scheduler::Task *tasks, uint8_t num_tasks);
